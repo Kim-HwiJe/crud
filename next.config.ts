@@ -1,11 +1,12 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
   typescript: {
-    ignoreBuildErrors: true, // ✅ 타입 오류 무시
+    ignoreBuildErrors: true,
   },
   eslint: {
-    ignoreDuringBuilds: true, // ✅ ESLint 경고 무시
+    ignoreDuringBuilds: true,
   },
 }
 
