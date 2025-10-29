@@ -6,13 +6,18 @@ import { useState } from 'react'
 export default function AddTopic() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [loading, setLoading] = useState(false) // ✅ 중복 방지
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    if (loading) return // ✅ 이미 요청 중이면 무시
+    setLoading(true)
+
     if (!title || !description) {
       alert('Title and description are required.')
+      setLoading(false)
       return
     }
 
@@ -26,13 +31,15 @@ export default function AddTopic() {
       })
 
       if (res.ok) {
+        // router.refresh()는 push 이후 자동으로 렌더링되므로 제거해도 됨
         router.push('/')
-        router.refresh()
       } else {
         throw new Error('Failed to create a topic')
       }
     } catch (error) {
       console.error('Error creating topic:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -42,24 +49,21 @@ export default function AddTopic() {
         className="border border-slate-500 p-4"
         type="text"
         placeholder="Topic Title"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setTitle(e.target.value)
-        }
+        onChange={(e) => setTitle(e.target.value)}
         value={title}
       />
       <textarea
         className="border border-slate-500 p-4 h-32"
         placeholder="Topic Description"
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-          setDescription(e.target.value)
-        }
+        onChange={(e) => setDescription(e.target.value)}
         value={description}
       />
       <button
+        disabled={loading}
         className="bg-green-800 text-white font-bold px-6 py-3 w-fit rounded-md"
         type="submit"
       >
-        Add Topic
+        {loading ? 'Adding...' : 'Add Topic'}
       </button>
     </form>
   )
