@@ -6,13 +6,13 @@ import { useState } from 'react'
 export default function AddTopic() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [loading, setLoading] = useState(false) // ✅ 중복 방지
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (loading) return // ✅ 이미 요청 중이면 무시
+    if (loading) return
     setLoading(true)
 
     if (!title || !description) {
@@ -31,7 +31,6 @@ export default function AddTopic() {
       })
 
       if (res.ok) {
-        // router.refresh()는 push 이후 자동으로 렌더링되므로 제거해도 됨
         router.push('/')
       } else {
         throw new Error('Failed to create a topic')
