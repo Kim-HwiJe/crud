@@ -1,6 +1,7 @@
 import connectMongoDB from '@/libs/mongodb'
 import Topic from '@/models/topic'
 import { NextRequest, NextResponse } from 'next/server'
+import mongoose from 'mongoose'
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,6 +47,13 @@ export async function DELETE(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json({ message: 'ID is required' }, { status: 400 })
+    }
+
+    if (!mongoose.isValidObjectId(id)) {
+      return NextResponse.json(
+        { message: 'Invalid ObjectId format' },
+        { status: 400 }
+      )
     }
 
     await connectMongoDB()

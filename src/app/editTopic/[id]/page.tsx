@@ -19,9 +19,9 @@ const getTopicById = async (id: string) => {
 export default async function EditTopic({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const { id } = params
+  const { id } = await params
   const { topic } = await getTopicById(id)
   const { title, description } = topic
 
